@@ -193,7 +193,7 @@ public class GameManager : Singleton<GameManager>
         // setup the Board
         if (m_board != null)
         {
-            m_board.SetupBoard();
+            m_board.boardSetup.SetupBoard();
         }
     }
 

@@ -64,7 +64,7 @@ public class Tile : MonoBehaviour {
 	{
 		if (m_board !=null)
 		{
-			m_board.ClickTile(this);
+			m_board.boardInput.ClickTile(this);
 		}
 
 	}
@@ -75,7 +75,7 @@ public class Tile : MonoBehaviour {
 	{
 		if (m_board !=null)
 		{
-			m_board.DragToTile(this);
+			m_board.boardInput.DragToTile(this);
 		}
 	}
 
@@ -84,7 +84,7 @@ public class Tile : MonoBehaviour {
 	{
 		if (m_board !=null)
 		{
-			m_board.ReleaseTile();
+			m_board.boardInput.ReleaseTile();
 		}
 	}
 

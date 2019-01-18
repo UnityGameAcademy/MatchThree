@@ -72,6 +72,48 @@ public class BoardShuffler : MonoBehaviour
         }
     }
 
+    // shuffle non-bomb and non-collectible GamePieces
+    public IEnumerator ShuffleBoardRoutine(Board board)
+    {
+        if (board != null)
+        {
+
+
+            // get a list of all the GamePieces
+            List<GamePiece> allPieces = new List<GamePiece>();
+            foreach (GamePiece piece in board.allGamePieces)
+            {
+                allPieces.Add(piece);
+            }
+
+            // wait for any GamePieces that have not settled into place
+            while (!board.boardQuery.IsCollapsed(allPieces))
+            {
+                yield return null;
+            }
+
+            // remove any normalPieces from m_allGamePieces and store them in a List
+            List<GamePiece> normalPieces = RemoveNormalPieces(board.allGamePieces);
+
+            // shuffle the list of normal pieces
+            board.boardShuffler.ShuffleList(normalPieces);
+
+            // use the shuffled list to fill the Board
+            board.boardFiller.FillBoardFromList(normalPieces);
+
+            // move the pieces to their correct onscreen positions
+            MovePieces(board.allGamePieces, board.swapTime);
+
+            // in the event some matches form, clear and refill the Board
+            List<GamePiece> matches = board.boardMatcher.FindAllMatches();
+            StartCoroutine(board.ClearAndRefillBoardRoutine(matches));
+        }
+
+
+    }
+
+
+
     // moves GamePieces into onscreen positions after being shuffled in the array
     public void MovePieces(GamePiece[,] allPieces, float swapTime = 0.5f)
     {
@@ -93,8 +135,6 @@ public class BoardShuffler : MonoBehaviour
         }
 
     }
-
-
 
 
 }

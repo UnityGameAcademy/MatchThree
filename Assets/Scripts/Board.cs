@@ -239,8 +239,7 @@ public class Board : MonoBehaviour
                     // clear matches and refill the Board
                     List<GamePiece> piecesToClear = tileAMatches.Union(tileBMatches).ToList().Union(colorMatches).ToList();
 
-                    // clear any blockers adjacent to matching pieces
-                    boardClearer.ClearAdjacentBlockers(piecesToClear);
+
 
                     yield return StartCoroutine(ClearAndRefillBoardRoutine(piecesToClear));
 
@@ -269,6 +268,9 @@ public class Board : MonoBehaviour
         // disable player input so we cannot swap pieces while the Board is collapsing/refilling
         playerInputEnabled = false;
         isRefilling = true;
+
+        // clear any blockers adjacent to matching pieces
+        boardClearer.ClearAdjacentBlockers(gamePieces);
 
         // create a new List of GamePieces, using our initial list as a starting point
         List<GamePiece> matches = gamePieces;

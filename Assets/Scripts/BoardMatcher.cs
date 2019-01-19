@@ -24,7 +24,7 @@ public class BoardMatcher : MonoBehaviour
         GamePiece startPiece = null;
 
         // get a starting piece at an (x,y) position in the array of GamePieces
-        if (board.boardQuery.IsWithinBounds(startX, startY))
+        if (board.boardQuery.IsWithinBounds(startX, startY) && board.boardQuery.IsUnblocked(startX,startY))
         {
             startPiece = board.allGamePieces[startX, startY];
         }
@@ -65,7 +65,8 @@ public class BoardMatcher : MonoBehaviour
             // ... if it matches then add it our running list of GamePieces
             else
             {
-                if (nextPiece.matchValue == startPiece.matchValue && !matches.Contains(nextPiece) && nextPiece.matchValue != MatchValue.None)
+                if (nextPiece.matchValue == startPiece.matchValue && !matches.Contains(nextPiece) && nextPiece.matchValue != MatchValue.None &&
+                    board.boardQuery.IsUnblocked(nextPiece.xIndex, nextPiece.yIndex))
                 {
                     matches.Add(nextPiece);
                 }

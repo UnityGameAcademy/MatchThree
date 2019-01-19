@@ -24,7 +24,8 @@ public class BoardCollapser : MonoBehaviour
         for (int i = 0; i < board.height - 1; i++)
         {
             // if the current space is empty and not occupied by an Obstacle Tile...
-            if (board.allGamePieces[column, i] == null && board.allTiles[column, i].tileType != TileType.Obstacle)
+            if (board.allGamePieces[column, i] == null && board.allTiles[column, i].tileType != TileType.Obstacle
+            && board.boardQuery.IsUnblocked(column,i))
             {
                 // ...loop from the space above it to the top of the column, to search for the next GamePiece
                 for (int j = i + 1; j < board.height; j++)
@@ -42,7 +43,6 @@ public class BoardCollapser : MonoBehaviour
                         {
                             movingPieces.Add(board.allGamePieces[column, i]);
                         }
-
 
                         board.allGamePieces[column, j] = null;
 

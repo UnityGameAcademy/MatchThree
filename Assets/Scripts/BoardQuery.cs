@@ -255,6 +255,7 @@ public class BoardQuery : MonoBehaviour
         return (x >= 0 && x < board.width && y >= 0 && y < board.height);
     }
 
+    // is the Tile blocked by a blocker?
     public bool IsUnblocked(int x, int y)
     {
         if (board == null)

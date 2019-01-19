@@ -4,17 +4,11 @@ using UnityEngine;
 
 public class Blocker : MonoBehaviour
 {
-    // current "health" of a Blocker tile
-    public int blockableValue = 0;
 
     // x and y index used for determining position in the Board's array
     public int xIndex;
     public int yIndex;
     public Board board;
-
-    // array of Sprites used to show damage on Breakable Tile
-    public Sprite[] sprites;
-
 
     public float delayTime = 0.5f;
     public float scaleTime = 0.3f;

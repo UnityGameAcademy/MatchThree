@@ -18,7 +18,7 @@ public class BoardInput : MonoBehaviour
         if (board == null)
             return;
 
-        if (board.clickedTile == null)
+        if (board.clickedTile == null && board.boardQuery.IsUnblocked(tile.xIndex, tile.yIndex))
         {
             board.clickedTile = tile;
         }
@@ -29,8 +29,10 @@ public class BoardInput : MonoBehaviour
     {
         if (board == null)
             return;
-        if (board.clickedTile != null && board.boardQuery.IsNextTo(tile, board.clickedTile))
+        if (board.clickedTile != null && board.boardQuery.IsNextTo(tile, board.clickedTile)
+            && board.boardQuery.IsUnblocked(tile.xIndex, tile.yIndex))
         {
+
             board.targetTile = tile;
         }
     }

@@ -43,6 +43,66 @@ public class BoardClearer : MonoBehaviour
         //HighlightTileOff(x,y);
     }
 
+    public void ClearBlockerAt(int x, int y)
+    {
+        if (board == null)
+            return;
+
+        Blocker blockerToClear = board.allBlockers[x, y];
+
+        if (blockerToClear != null)
+        {
+            board.allBlockers[x, y] = null;
+            blockerToClear.SelfDestruct();
+
+        }
+    }
+
+    public void ClearBlockers(List<Blocker> blockersToClear)
+    {
+        if (board == null)
+            return;
+
+        foreach (Blocker blocker in blockersToClear)
+        {
+            if (blocker != null)
+            {
+                ClearBlockerAt(blocker.xIndex, blocker.yIndex);
+            }
+        }
+    }
+
+    // clear any blockers directly underneath given List of GamePieces (for bombed pieces)
+    public void ClearBlockers(List<GamePiece> gamePieces)
+    {
+        if (board == null)
+            return;
+
+        foreach (GamePiece piece in gamePieces)
+        {
+            if (piece != null)
+            {
+                ClearBlockerAt(piece.xIndex, piece.yIndex);
+            }
+        }
+    }
+
+    // clear any blockers adjacent to given List of GamePieces
+    public void ClearAdjacentBlockers(List<GamePiece> gamePieces)
+    {
+        if (board == null)
+            return;
+
+        foreach (GamePiece piece in gamePieces)
+        {
+            if (piece != null)
+            {
+                List<Blocker> adjacentBlockers = board.boardQuery.GetAdjacentBlockers(piece.xIndex, piece.yIndex);
+                ClearBlockers(adjacentBlockers);
+            }
+        }
+    }
+
     // clear a list of GamePieces (plus a potential sublist of GamePieces destroyed by bombs)
     public void ClearPieceAt(List<GamePiece> gamePieces, List<GamePiece> bombedPieces)
     {

@@ -25,6 +25,9 @@ public class BoardSetup : MonoBehaviour
         // sets up any manually placed GamePieces
         SetupGamePieces();
 
+        // set up any Blockers
+        SetupBlockers();
+
         // check the Board for Collectibles 
         List<GamePiece> startingCollectibles = board.boardQuery.FindAllCollectibles();
         board.collectibleCount = startingCollectibles.Count;
@@ -77,6 +80,22 @@ public class BoardSetup : MonoBehaviour
                 board.boardFiller.MakeGamePiece(piece, sPiece.x, sPiece.y, board.fillYOffset, board.fillMoveTime);
             }
 
+        }
+
+    }
+
+    // setup any starting blockers
+    public void SetupBlockers()
+    {
+        if (board == null)
+            return;
+
+        foreach (StartingObject sBlocker in board.startingBlockers)
+        {
+            if (sBlocker != null)
+            {
+                board.boardFiller.MakeBlocker(sBlocker.prefab, sBlocker.x, sBlocker.y);
+            }
         }
     }
 

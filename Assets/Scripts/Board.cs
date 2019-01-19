@@ -57,6 +57,9 @@ public class Board : MonoBehaviour
     // Prefab bomb FX for clearing a single color from the Board
     public GameObject colorBombPrefab;
 
+    // Prefab blocker, obscuring GamePieces
+    public GameObject blockerPrefab;
+
     // the maximum number of Collectible game pieces allowed per Board
     public int maxCollectibles = 3;
 
@@ -85,6 +88,8 @@ public class Board : MonoBehaviour
     // array of all of the Board's GamePieces
     public GamePiece[,] allGamePieces;
 
+    public Blocker[,] allBlockers;
+
     // Tile first clicked by mouse or finger
     public Tile clickedTile;
 
@@ -99,6 +104,9 @@ public class Board : MonoBehaviour
 
     // manually positioned GamePieces, placed before the Board is filled
     public StartingObject[] startingGamePieces;
+
+    // manually positioned Blockers, placed before Board is filled
+    public StartingObject[] startingBlockers;
 
     // manager class for particle effects
     public ParticleManager particleManager;
@@ -154,6 +162,9 @@ public class Board : MonoBehaviour
 
         // initial array of GamePieces
         allGamePieces = new GamePiece[width, height];
+
+        // initial array of Blockers
+        allBlockers = new Blocker[width, height];
 
         // find the ParticleManager by Tag
         particleManager = GameObject.FindWithTag("ParticleManager").GetComponent<ParticleManager>();
@@ -228,6 +239,9 @@ public class Board : MonoBehaviour
                     // clear matches and refill the Board
                     List<GamePiece> piecesToClear = tileAMatches.Union(tileBMatches).ToList().Union(colorMatches).ToList();
 
+                    // clear any blockers adjacent to matching pieces
+                    boardClearer.ClearAdjacentBlockers(piecesToClear);
+
                     yield return StartCoroutine(ClearAndRefillBoardRoutine(piecesToClear));
 
 
@@ -259,12 +273,17 @@ public class Board : MonoBehaviour
         // create a new List of GamePieces, using our initial list as a starting point
         List<GamePiece> matches = gamePieces;
 
+
+
+
         // store a score multiplier for chain reactions
         scoreMultiplier = 0;
         do
         {
             //  increment our score multiplier by 1 for each subsequent recursive call of ClearAndCollapseRoutine
             scoreMultiplier++;
+
+
 
             // run the coroutine to clear the Board and collapse any columns to fill in the spaces
             yield return StartCoroutine(ClearAndCollapseRoutine(matches));
@@ -306,6 +325,9 @@ public class Board : MonoBehaviour
     // coroutine to clear GamePieces from the Board and collapse any empty spaces
     IEnumerator ClearAndCollapseRoutine(List<GamePiece> gamePieces)
     {
+
+
+
         // list of GamePieces that will be moved
         List<GamePiece> movingPieces = new List<GamePiece>();
 
@@ -319,6 +341,9 @@ public class Board : MonoBehaviour
 
         while (!isFinished)
         {
+
+
+
             // check the original list for bombs and append any pieces affected by these bombs
             List<GamePiece> bombedPieces = boardQuery.GetBombedPieces(gamePieces);
 
@@ -337,6 +362,12 @@ public class Board : MonoBehaviour
 
             // clear the GamePieces, pass in the list of GamePieces affected by bombs as a separate list
             boardClearer.ClearPieceAt(gamePieces, bombedPieces);
+
+
+
+            // clear any blockers directly underneath bombed pieces
+            boardClearer.ClearBlockers(bombedPieces);
+
 
             // break any tiles under the cleared GamePieces
             boardTiles.BreakTileAt(gamePieces);

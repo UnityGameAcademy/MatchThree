@@ -99,7 +99,7 @@ public class BoardQuery : MonoBehaviour
         return gamePieces;
     }
 
-    // get all GamePieces adjacent to a position (x,y)
+     //get all GamePieces adjacent to a position (x,y) for adjacent 3 x3 bomb (include diagonals)
     public List<GamePiece> GetAdjacentPieces(int x, int y, int offset = 1)
     {
         if (board == null)
@@ -121,6 +121,32 @@ public class BoardQuery : MonoBehaviour
 
         return gamePieces;
     }
+
+    // get blocker adjacent to postion (x,y) (does not include diagonals)
+    public List<Blocker> GetAdjacentBlockers(int x, int y)
+    {
+        if (board == null)
+            return new List<Blocker>(); ;
+
+        List<Blocker> blockers = new List<Blocker>();
+
+        Vector2Int[] directions = {new Vector2Int(-1,0), new Vector2Int(1,0), new Vector2Int(0,1), new Vector2Int(0,-1) };
+
+        foreach (Vector2Int d in directions)
+        {
+            int i = x + d.x;
+            int j = y + d.y;
+            if (board.boardQuery.IsWithinBounds(i,j) && board.allBlockers[i,j] != null)
+            {
+                blockers.Add(board.allBlockers[i, j]);
+            }
+
+        }
+        return blockers;
+
+    }
+
+
 
     // given a list of GamePieces, returns a new List of GamePieces that would be destroyed by bombs from the original list
     public List<GamePiece> GetBombedPieces(List<GamePiece> gamePieces)
@@ -229,6 +255,14 @@ public class BoardQuery : MonoBehaviour
         return (x >= 0 && x < board.width && y >= 0 && y < board.height);
     }
 
+    public bool IsUnblocked(int x, int y)
+    {
+        if (board == null)
+            return false;
+
+        return (board.allBlockers[x, y] == null);
+    }
+
     // return if the Bomb is a Color Bomb
     public bool IsColorBomb(GamePiece gamePiece)
     {
@@ -281,23 +315,6 @@ public class BoardQuery : MonoBehaviour
 
     }
 
-
-
-    // public bool IsNextTo(Tile start, Tile end)
-    // {
-    //     if (Mathf.Abs(start.xIndex - end.xIndex) == 1 && start.yIndex == end.yIndex)
-    //     {
-    //         return true;
-    //     }
-
-    //     if (Mathf.Abs(start.yIndex - end.yIndex) == 1 && start.xIndex == end.xIndex)
-    //     {
-    //         return true;
-    //     }
-
-    //     return false;
-    // }
-
     // return true if one Tile is adjacent to another, otherwise returns false
     public bool IsNextTo(Tile start, Tile end)
     {
@@ -305,10 +322,6 @@ public class BoardQuery : MonoBehaviour
         return (Mathf.Abs(start.xIndex - end.xIndex) + Mathf.Abs(start.yIndex - end.yIndex) == 1);
 
     }
-
-
-
-
 
     // checks if the GamePieces have reached their destination positions on collapse
     public bool IsCollapsed(List<GamePiece> gamePieces)

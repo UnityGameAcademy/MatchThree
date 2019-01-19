@@ -212,6 +212,23 @@ public class BoardFiller : MonoBehaviour
         }
     }
 
+    public void MakeBlocker(GameObject prefab, int x, int y, int z = -1)
+    {
+        if (board == null || prefab == null || !board.boardQuery.IsWithinBounds(x,y))
+            return;
+
+        GameObject blocker = Instantiate(prefab, new Vector3(x, y, z), Quaternion.identity) as GameObject;
+        blocker.name = "Blocker (" + x + "," + y + ")";
+
+        blocker.transform.parent = transform;
+        blocker.GetComponent<Blocker>().Init(x, y, board);
+
+        
+    }
+
+
+
+
     // Creates a GamePiece prefab at a certain (x,y,z) coordinate
     public void MakeGamePiece(GameObject prefab, int x, int y, int falseYOffset = 0, float moveTime = 0.1f)
     {

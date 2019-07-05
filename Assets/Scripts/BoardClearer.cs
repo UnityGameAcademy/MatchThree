@@ -8,9 +8,17 @@ public class BoardClearer : MonoBehaviour
 {
     public Board board;
 
+    public List<int> unblockedColumns;
+
     private void Awake()
     {
         board = GetComponent<Board>();
+        ResetUnblockedColumns();
+    }
+
+    public void ResetUnblockedColumns()
+    {
+        unblockedColumns = new List<int>();
     }
 
     // clear the entire Board
@@ -54,6 +62,9 @@ public class BoardClearer : MonoBehaviour
         {
             board.allBlockers[x, y] = null;
             blockerToClear.SelfDestruct();
+
+            // keep track of which columns have been unblocked
+            unblockedColumns.Add(x);
 
         }
     }
@@ -152,8 +163,6 @@ public class BoardClearer : MonoBehaviour
             }
         }
     }
-
-
 
 
     // clear and refill one position of the Board (used by Booster)

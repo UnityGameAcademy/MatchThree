@@ -285,8 +285,6 @@ public class Board : MonoBehaviour
             //  increment our score multiplier by 1 for each subsequent recursive call of ClearAndCollapseRoutine
             scoreMultiplier++;
 
-
-
             // run the coroutine to clear the Board and collapse any columns to fill in the spaces
             yield return StartCoroutine(ClearAndCollapseRoutine(matches));
 
@@ -344,8 +342,6 @@ public class Board : MonoBehaviour
         while (!isFinished)
         {
 
-
-
             // check the original list for bombs and append any pieces affected by these bombs
             List<GamePiece> bombedPieces = boardQuery.GetBombedPieces(gamePieces);
 
@@ -362,14 +358,14 @@ public class Board : MonoBehaviour
             // store what columns need to be collapsed
             List<int> columnsToCollapse = boardQuery.GetColumns(gamePieces);
 
+            columnsToCollapse = columnsToCollapse.Union(boardClearer.unblockedColumns).ToList();
+
+
             // clear the GamePieces, pass in the list of GamePieces affected by bombs as a separate list
             boardClearer.ClearPieceAt(gamePieces, bombedPieces);
 
-
-
             // clear any blockers directly underneath bombed pieces
             boardClearer.ClearBlockers(bombedPieces);
-
 
             // break any tiles under the cleared GamePieces
             boardTiles.BreakTileAt(gamePieces);
@@ -405,6 +401,9 @@ public class Board : MonoBehaviour
             if (matches.Count == 0)
             {
                 isFinished = true;
+
+                // reset any unblocked columns
+                boardClearer.ResetUnblockedColumns();
                 break;
             }
             // otherwise, increase our score multiplier for the chair reaction... 

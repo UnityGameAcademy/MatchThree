@@ -44,8 +44,27 @@ public class BoardClearer : MonoBehaviour
 
         if (pieceToClear != null)
         {
-            board.allGamePieces[x, y] = null;
-            Destroy(pieceToClear.gameObject);
+
+            // add extra check in here if pieceToClear is Breakable
+            GamePieceBreakable breakable = pieceToClear.GetComponent<GamePieceBreakable>();
+
+            if (breakable == null) 
+            {
+                board.allGamePieces[x, y] = null;
+                Destroy(pieceToClear.gameObject);
+            }
+            else if (!breakable.isBroken)
+            {
+
+                breakable.BreakPiece();
+            }
+            else
+            {
+                board.allGamePieces[x, y] = null;
+                Destroy(pieceToClear.gameObject);
+             
+            }
+
         }
 
         //HighlightTileOff(x,y);

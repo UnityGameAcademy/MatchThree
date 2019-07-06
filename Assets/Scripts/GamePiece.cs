@@ -53,9 +53,13 @@ public class GamePiece : MonoBehaviour {
     // the sound the GamePiece makes when it clears
     public AudioClip clearSound;
 
+    public virtual void Awake()
+    {
+
+    }
 
     // initialize the GamePiece with a reference to the Board
-	public void Init(Board board)
+    public void Init(Board board)
 	{
 		m_board = board;
 	}

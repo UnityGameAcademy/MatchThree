@@ -48,21 +48,14 @@ public class BoardClearer : MonoBehaviour
             // add extra check in here if pieceToClear is Breakable
             GamePieceBreakable breakable = pieceToClear.GetComponent<GamePieceBreakable>();
 
-            if (breakable == null) 
+            if (breakable == null || (breakable != null && breakable.isBroken))
             {
                 board.allGamePieces[x, y] = null;
                 Destroy(pieceToClear.gameObject);
-            }
-            else if (!breakable.isBroken)
-            {
-
-                breakable.BreakPiece();
             }
             else
             {
-                board.allGamePieces[x, y] = null;
-                Destroy(pieceToClear.gameObject);
-             
+                breakable.BreakPiece();
             }
 
         }

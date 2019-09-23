@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "World", menuName ="World")]
+[CreateAssetMenu(fileName = "LevelConfiguration", menuName = "LevelConfiguration/World")]
 public class World : ScriptableObject
 {
     public Level[] levels;

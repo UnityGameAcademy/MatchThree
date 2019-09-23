@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="World", menuName = "Level")]
+[CreateAssetMenu(fileName ="LevelConfiguration", menuName = "LevelConfiguration/Level")]
 public class Level : ScriptableObject
 {
     // BoardSetup
@@ -28,10 +28,6 @@ public class Level : ScriptableObject
     // GameManager Setup
     [Header("Goals")]
     public CollectionGoal[] collectionGoals;
-
-
-    // the number of stars earned for this level
-    public int scoreStars;
 
     // minimum scores used to earn stars
     public int[] scoreGoals = { 1000, 2000, 3000 };

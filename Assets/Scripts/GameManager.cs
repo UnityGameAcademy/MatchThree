@@ -3,12 +3,15 @@
 //using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic;
 
 // the GameManager is the master controller for the GamePlay
 
 [RequireComponent(typeof(LevelGoal))]
 public class GameManager : Singleton<GameManager>
 {
+    public World currentWorld;
+    public int currentLevel;
 
     // reference to the Board
     Board m_board;
@@ -30,9 +33,6 @@ public class GameManager : Singleton<GameManager>
     // reference to LevelGoal component
     LevelGoal m_levelGoal;
 
-    // reference to LevelGoalTimed component (null if level is not timed)
-    //    LevelGoalTimed m_levelGoalTimed;
-
     LevelGoalCollected m_levelGoalCollected;
 
     // public reference to LevelGoalTimed component
@@ -49,12 +49,64 @@ public class GameManager : Singleton<GameManager>
         m_levelGoalCollected = GetComponent<LevelGoalCollected>();
 
         // cache a reference to the Board
-        m_board = GameObject.FindObjectOfType<Board>().GetComponent<Board>();
+        m_board = Object.FindObjectOfType<Board>().GetComponent<Board>();
 
     }
 
+    // looks at a specific world and reads the data
+    void ConfigureLevel(int levelIndex)
+    {
+        if (currentWorld == null)
+        {
+            Debug.LogError("GAMEMANAGER SetupLevelData: missing world...");
+            return;
+        }
+
+        if (levelIndex >= currentWorld.levels.Length)
+        {
+            Debug.LogError("GAMEMANAGER SetupLevelData: invalid level index...");
+            return;
+        }
+
+        if (m_board == null)
+        {
+            Debug.LogError("GAMEMANAGER SetupLevelData: missing Board...");
+            return;
+        }
+
+        // reference to the Level ScriptableObject (just for readability)
+        Level levelConfig = currentWorld.levels[levelIndex];
+
+        m_board.width = levelConfig.width;
+        m_board.height = levelConfig.height;
+        m_board.startingTiles = levelConfig.startingTiles;
+        m_board.startingGamePieces = levelConfig.startingGamePieces;
+        m_board.startingBlockers = levelConfig.startingBlockers;
+        m_board.gamePiecePrefabs = levelConfig.gamePiecePrefabs;
+        m_board.chanceForCollectible = levelConfig.chanceForCollectible;
+
+        // we need to create a new Collection Goal array by instantiating the prefabs
+        List<CollectionGoal> goals = new List<CollectionGoal>();
+        foreach (CollectionGoal g in levelConfig.collectionGoals)
+        {
+            CollectionGoal instance = Instantiate(g, transform);
+            goals.Add(instance);
+        }
+
+        // we can only assign the array of instances to the 
+        m_levelGoalCollected.collectionGoals = goals.ToArray();
+        m_levelGoalCollected.scoreGoals = levelConfig.scoreGoals;
+        m_levelGoalCollected.movesLeft = levelConfig.movesLeft;
+        m_levelGoalCollected.timeLeft = levelConfig.timeLeft;
+        m_levelGoalCollected.levelCounter = levelConfig.levelCounter;
+    }
+
+
     void Start()
     {
+
+        ConfigureLevel(currentLevel);
+
 
         if (UIManager.Instance != null)
         {

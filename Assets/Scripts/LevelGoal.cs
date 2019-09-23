@@ -15,7 +15,7 @@ public abstract class LevelGoal : Singleton<LevelGoal>
     public int scoreStars = 0;
 
     // minimum scores used to earn stars
-    public int[] scoreGoals = new int[3] { 1000, 2000, 3000 };
+    public int[] scoreGoals = { 1000, 2000, 3000 };
 
     // number of moves left in this level (replaces GameManager movesLeft)
     public int movesLeft = 30;

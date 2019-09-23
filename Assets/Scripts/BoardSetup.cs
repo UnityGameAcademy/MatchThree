@@ -7,6 +7,7 @@ public class BoardSetup : MonoBehaviour
 {
     public Board board;
 
+
     private void Awake()
     {
         board = GetComponent<Board>();

@@ -22,10 +22,34 @@ public class CollectionGoal : MonoBehaviour
 
     public void CollectPiece(GamePiece piece)
     {
+        if (piece == null)
+        {
+            Debug.LogError("COLLECTIONGOAL CollectPiece: missing piece");
+            return;
+        }
+
+        if (prefabToCollect == null)
+        {
+            Debug.LogError("COLLECTIONGOAL CollectPiece: missing prefab specified...");
+            return;
+        }
+
+        if (m_spriteRenderer == null)
+        {
+            m_spriteRenderer = prefabToCollect.GetComponent<SpriteRenderer>();
+        }
+
+        if (m_spriteRenderer == null)
+        {
+            Debug.LogError("COLLECTIONGOAL CollectPiece: prefab missing SpriteRenderer...");
+            return;
+        }
+
         if (piece != null)
         {
-            SpriteRenderer spriteRenderer = piece.GetComponent<SpriteRenderer>();
 
+            SpriteRenderer spriteRenderer = piece.GetComponent<SpriteRenderer>();
+            
             if (m_spriteRenderer.sprite == spriteRenderer.sprite && prefabToCollect.matchValue == piece.matchValue)
             {
                 numberToCollect--;
